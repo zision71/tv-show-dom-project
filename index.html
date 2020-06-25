@@ -4,16 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TV Show Project | zision(zision71)</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
 
   <body>
+    <div id="selectWrapper">
+      <select name="epSelector" id="selector">
+        <option value="zision">Select Episode</option>
+      
+    </div>
+    <div id="searchWrapper">
+      <input id="searchBar" placeholder="search for a character" />
+      <h6 id="displayNo"></h6>
+    </div>
     <div id="root"></div>
-
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
-
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
   </body>

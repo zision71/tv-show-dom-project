@@ -1,3 +1,34 @@
 #root {
-  color: red;
+  color: black;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 5px;
+  row-gap: 5px;
+}
+section {
+  border: 2px solid black;
+}
+
+h5 {
+  border-style: solid;
+  border-width: medium;
+  border-radius: 5px;
+  text-align: center;
+  margin: 30px;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+p {
+  margin: 10px;
+  text-align: justify;
+}
+#displayNo {
+  display: inline;
 }
