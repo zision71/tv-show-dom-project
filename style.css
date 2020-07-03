@@ -32,3 +32,12 @@ p {
 #displayNo {
   display: inline;
 }
+#fetchSelectWrapper {
+  display: inline;
+}
+#selectWrapper {
+  display: inline;
+}
+#searchWrapper {
+  display: inline;
+}
