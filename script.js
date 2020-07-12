@@ -50,7 +50,7 @@ for (let i = 0; i < allEpisodes.length; i++) {
     .padStart(2, 0)}E${allEpisodes[i].number.toString().padStart(2, 0)} - ${
     allEpisodes[i].name
   }`;
-  el.textContent = displayOptions;
+  el.innerHTML = displayOptions;
   el.value = displayOptions;
   selector.appendChild(el);
 }
@@ -81,13 +81,13 @@ function display(array) {
     const imgEls = document.createElement("img");
 
     rootElem.appendChild(sectionMain);
-    sectionMain.appendChild(h5Els).textContent = `${
+    sectionMain.appendChild(h5Els).innerHTML = `${
       episode.name
     } S${episode.season
       .toString()
       .padStart(2, 0)} E${episode.number.toString().padStart(2, 0)}`;
     sectionMain.appendChild(imgEls).src = episode.image.medium;
-    sectionMain.appendChild(pEls).textContent = episode.summary;
+    sectionMain.appendChild(pEls).innerHTML = episode.summary;
   });
 }
 // ---------------------------------------------------------------------------------------------------------------
@@ -100,58 +100,109 @@ function displayFetch() {
     .then((data) => fetchData(data));
 }
 
-function fetchData(data) {
+function fetchData(array) {
   rootElem.innerHTML = "";
-  data.forEach((episode) => {
+  array.forEach((episode) => {
     const sectionMain = document.createElement("section");
     const h5Els = document.createElement("h5");
     const pEls = document.createElement("p");
     const imgEls = document.createElement("img");
 
     rootElem.appendChild(sectionMain);
-    sectionMain.appendChild(h5Els).textContent = `${
+    sectionMain.appendChild(h5Els).innerHTML = `${
       episode.name
     } S${episode.season
       .toString()
       .padStart(2, 0)} E${episode.number.toString().padStart(2, 0)}`;
-    sectionMain.appendChild(imgEls).src = episode.image.medium;
-    sectionMain.appendChild(pEls).textContent = episode.summary;
+    if (episode.image !== null) {
+      sectionMain.appendChild(imgEls).src = episode.image.medium;
+    }
+
+    sectionMain.appendChild(pEls).innerHTML = episode.summary;
+  });
+
+  let selector = document.getElementById("selector");
+
+  console.log(selector);
+
+  console.log(array);
+  selector.options.length = 0;
+  for (let i = 0; i < array.length; i++) {
+    let el = document.createElement("option");
+    let displayOptions = ` S${array[i].season
+      .toString()
+      .padStart(2, 0)}E${array[i].number.toString().padStart(2, 0)} - ${
+      array[i].name
+    }`;
+    el.textContent = displayOptions;
+    el.value = displayOptions;
+    selector.appendChild(el);
+  }
+
+  selector.addEventListener("change", (event) => {
+    let selectString = event.target.value;
+
+    let selectFilteredResult = array.filter((i) => {
+      return (
+        ` S${i.season.toString().padStart(2, 0)}E${i.number
+          .toString()
+          .padStart(2, 0)} - ${i.name}` === selectString
+      );
+    });
+
+    display(selectFilteredResult);
+  });
+  const searchBar = document.getElementById("searchBar");
+
+  const sectionMain = document.getElementsByTagName("section");
+
+  const displayNo = document.getElementById("displayNo");
+
+  searchBar.addEventListener("keyup", (e) => {
+    console.log(e);
+    let searchString = e.target.value.toLowerCase();
+
+    let filteredResult = array.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(searchString) ||
+        item.summary.toLowerCase().includes(searchString)
+      );
+    });
+
+    display(filteredResult);
+
+    displayNo.innerText = `Displaying ${filteredResult.length}/${allEpisodes.length} episodes`;
   });
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 window.onload = setup;
 
-let fetchSelector = document.getElementById("fectchselector");
-let nameArray = allShows.map((i) => i.name);
-
-let sortname = nameArray.sort();
-
-// console.log(sortname);
+let showSelector = document.getElementById("fectchselector");
+let nameArray = allShows.sort((a, b) => {
+  if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+  if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+  return 0;
+});
+console.log(nameArray);
 
 for (let i = 0; i < nameArray.length; i++) {
   let fetchel = document.createElement("option");
-  let fetchdisplayOptions = `${nameArray[i]}`;
 
-  fetchel.textContent = fetchdisplayOptions;
-  fetchel.value = `${allShows[i].id}`;
-  fetchSelector.appendChild(fetchel);
+  let fetchdisplayOptions = `${nameArray[i].name}`;
+
+  fetchel.innerHTML = fetchdisplayOptions;
+  fetchel.value = `${nameArray[i].id}`;
+  showSelector.appendChild(fetchel);
 }
 
-fetchSelector.addEventListener("change", (event) => {
+showSelector.addEventListener("change", (event) => {
   let fetchselectString = event.target.value;
   console.log(fetchselectString);
-  fetch(`https://api.tvmaze.com/shows/${fetchselectString}/episodes `)
-    .then((response) => response.json())
-    .then((data) => fetchData(data));
-
-  // let selectFetchFilteredResult = allShows.filter((i) => {
-  //   return (
-  //     ` S${i.season.toString().padStart(2, 0)}E${i.number
-  //       .toString()
-  //       .padStart(2, 0)} - ${i.name}` === fetchselectString
-  //   );
+  function displayshowandepisode() {
+    fetch(`https://api.tvmaze.com/shows/${fetchselectString}/episodes `)
+      .then((response) => response.json())
+      .then((data) => fetchData(data));
+  }
+  displayshowandepisode();
 });
-
-// display(selectFilteredResult);
-// });
