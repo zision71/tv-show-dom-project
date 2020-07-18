@@ -1,5 +1,6 @@
 #root {
   color: black;
+  background-color: #fdffb6;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
